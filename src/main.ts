@@ -30,6 +30,7 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors();
   app.enableShutdownHooks();
   app.setGlobalPrefix('api');
   app.enableVersioning({
