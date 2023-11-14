@@ -15,7 +15,6 @@ import * as morgan from 'morgan';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
     bufferLogs: true,
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -30,6 +29,12 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  });
 
   app.enableShutdownHooks();
   app.setGlobalPrefix('api');
