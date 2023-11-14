@@ -27,5 +27,6 @@ export default registerAs<IAppConfig>('app', () => {
   return {
     env: process.env.NODE_ENV || 'development',
     port: process.env.PORT ? +process.env.PORT : 3000,
+    webFeUrl: process.env.WEB_FE_URL || 'http://localhost:3000',
   };
 });
