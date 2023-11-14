@@ -1,4 +1,5 @@
 export interface IAppConfig {
+  webFeUrl: string;
   env: string;
   port: number;
 }

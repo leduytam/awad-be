@@ -3,6 +3,7 @@ import { IUserPayload } from 'src/auth/auth.interface';
 export declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      WEB_FE_URL: string;
       NODE_ENV: string;
       PORT: string;
 
