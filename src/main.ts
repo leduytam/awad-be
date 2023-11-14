@@ -5,12 +5,13 @@ import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import {
   ClassSerializerInterceptor,
-  Logger as NestLogger,
+  Logger,
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
+import * as morgan from 'morgan';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -19,6 +20,15 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   const configService = app.get(ConfigService<IAllConfig>);
+
+  const logger = new Logger('HTTP');
+  app.use(
+    morgan('tiny', {
+      stream: {
+        write: (message: string) => logger.log(message.replace('\n', '')),
+      },
+    }),
+  );
 
   app.enableShutdownHooks();
   app.setGlobalPrefix('api');
@@ -54,8 +64,8 @@ async function bootstrap() {
 void (async (): Promise<void> => {
   try {
     const url = await bootstrap();
-    NestLogger.log(url, 'Bootstrap');
+    Logger.log(url, 'Bootstrap');
   } catch (error) {
-    NestLogger.error(error, 'Bootstrap');
+    Logger.error(error, 'Bootstrap');
   }
 })();
