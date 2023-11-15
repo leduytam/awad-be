@@ -12,6 +12,7 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import * as morgan from 'morgan';
+import { EEnvironment } from './configs/app.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -30,11 +31,19 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors({
-    origin: [configService.getOrThrow('app.webFeUrl', { infer: true })],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  });
+  const isProduction =
+    configService.getOrThrow('app.env', { infer: true }) ===
+    EEnvironment.Production;
+
+  if (isProduction) {
+    app.enableCors({
+      origin: [configService.getOrThrow('app.webFeUrl', { infer: true })],
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    });
+  } else {
+    app.enableCors();
+  }
 
   app.enableShutdownHooks();
   app.setGlobalPrefix('api');

@@ -1,9 +1,9 @@
 import validateConfig from 'src/utils/validate-config';
-import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { registerAs } from '@nestjs/config';
 import { IAppConfig } from './config.interface';
 
-enum EEnvironment {
+export enum EEnvironment {
   Development = 'development',
   Production = 'production',
   Test = 'test',
@@ -13,6 +13,10 @@ class EnvironmentVariablesValidator {
   @IsEnum(EEnvironment)
   @IsOptional()
   NODE_ENV: EEnvironment;
+
+  @IsString()
+  @IsOptional()
+  WEB_FE_URL: string;
 
   @IsInt()
   @Min(0)
